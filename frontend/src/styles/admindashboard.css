@@ -153,6 +153,24 @@ body { background: var(--bg); font-family: 'Outfit', sans-serif; color: var(--te
 }
 .ad-nav-item.active .ad-nav-icon { color: var(--primary); }
 
+/* Link reset inside nav items */
+.ad-nav-item-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+}
+.ad-subnav-item,
+.ad-nested-item {
+  text-decoration: none;
+}
+.ad-logo-text {
+  text-decoration: none;
+}
+
 /* Active left bar */
 .ad-nav-item.active::before {
   content: '';
