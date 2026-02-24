@@ -6,24 +6,25 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 
+
+
+# Admin Login View api
 @api_view(['POST'])
 def admin_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
 
-    user = authenticate(username=username, password=password)
+    user = authenticate(username = username, password = password)
 
-    if user is not None and user.is_superuser:
+    if user is not None and user.is_staff:
         refresh = RefreshToken.for_user(user)
-
         return Response({
-            "message": "Admin login successful",
-            "access": str(refresh.access_token),
-            "refresh": str(refresh)
-        }, status=status.HTTP_200_OK)
-
+            'message': 'Login successfull!',
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }, status= status.HTTP_200_OK)
+    
     return Response({
-        "error": "Invalid credentials or not an admin"
+        'error': 'Invalid credentials or not an admin'
     }, status=status.HTTP_401_UNAUTHORIZED)
-
 
