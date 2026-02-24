@@ -1,4 +1,5 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import AdminLogin from './components/AdminLogin'
 
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div className=''>Home</div>} />
+        <Route path="/admin-login" element={<AdminLogin/>} />
       </Routes>
     </BrowserRouter>
   )
