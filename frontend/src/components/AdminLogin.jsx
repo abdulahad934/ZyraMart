@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/adminlogin.css';
+import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(null);
 
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      toast.error('Username and password are required');
+      return;
+    }
     setLoading(true);
     try {
       const response = await fetch('http://127.0.0.1:8000/api/users/admin-login/', {
@@ -21,16 +26,17 @@ const AdminLogin = () => {
         body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
-      if (response.ok) {
-        toast.success(data.message || 'Login successful!');
+
+      if (response.ok && data.access && data.refresh) {
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
-        setTimeout(() => window.location.href = '/admin-dashboard', 1500);
+        toast.success(data.message || 'Login successful!');
+        setTimeout(() => navigate('/admin-dashboard'), 500);
       } else {
         toast.error(data.message || 'Invalid credentials!');
       }
     } catch (error) {
-      toast.error('Something went wrong. Try again later.');
+      toast.error('Server error. Try again later.');
       console.error('Login error:', error);
     } finally {
       setLoading(false);
@@ -40,15 +46,12 @@ const AdminLogin = () => {
   return (
     <div className="al-root">
 
-      {/* Left Branding Panel */}
       <div className="al-left">
-        {/* Decorative circles */}
         <div className="al-deco-circle al-deco-circle-1" />
         <div className="al-deco-circle al-deco-circle-2" />
         <div className="al-deco-circle al-deco-circle-3" />
         <div className="al-left-glow" />
 
-        {/* Logo */}
         <div className="al-logo">
           <div className="al-logo-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
@@ -60,14 +63,12 @@ const AdminLogin = () => {
           <div className="al-logo-name">Zyra<span>Mart</span></div>
         </div>
 
-        {/* Hero Text */}
         <div className="al-hero">
           <div className="al-hero-tag"><span className="al-hero-tag-dot" />Admin Control Center</div>
           <h1 className="al-hero-title">Manage your<br /><em>store</em> with<br />confidence.</h1>
           <p className="al-hero-sub">Access orders, products, customers, and analytics — all from one dashboard.</p>
         </div>
 
-        {/* Stats */}
         <div className="al-stats">
           <div><div className="al-stat-num">12K<sup>+</sup></div><div className="al-stat-label">Products Listed</div></div>
           <div className="al-stat-divider" />
@@ -77,16 +78,12 @@ const AdminLogin = () => {
         </div>
       </div>
 
-      {/* ── Right Login Panel ── */}
       <div className="al-right">
         <div className="al-form-wrap">
-
-          {/* Form Header */}
           <p className="al-form-eyebrow">Admin Portal</p>
           <h2 className="al-form-title">Welcome back</h2>
           <p className="al-form-sub">Sign in to manage your store</p>
 
-          {/* Divider */}
           <div className="al-divider">
             <div className="al-divider-line" />
             <span className="al-divider-icon">
@@ -99,10 +96,8 @@ const AdminLogin = () => {
             <div className="al-divider-line" />
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} noValidate>
 
-            {/* Username */}
             <div className="al-field">
               <label className="al-label">Username</label>
               <div className={`al-input-wrap ${focused === 'username' ? 'focused' : ''}`}>
@@ -114,19 +109,17 @@ const AdminLogin = () => {
                 </span>
                 <input
                   type="text"
+                  name="username"
                   className="al-input"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   onFocus={() => setFocused('username')}
                   onBlur={() => setFocused(null)}
                   placeholder="Enter your username"
-                  required
-                  autoComplete="username"
                 />
               </div>
             </div>
 
-            {/* Password */}
             <div className="al-field">
               <label className="al-label">Password</label>
               <div className={`al-input-wrap ${focused === 'password' ? 'focused' : ''}`}>
@@ -138,26 +131,27 @@ const AdminLogin = () => {
                 </span>
                 <input
                   type="password"
+                  name="password"
                   className="al-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setFocused('password')}
                   onBlur={() => setFocused(null)}
                   placeholder="Enter your password"
-                  required
-                  autoComplete="current-password"
                 />
               </div>
             </div>
 
-            {/* Submit Button */}
             <button type="submit" className="al-btn" disabled={loading}>
               <div className="al-btn-shine" />
-              {loading ? <><span className="al-spinner" />Authenticating...</> : <>Sign In to Dashboard</>}
+              {loading
+                ? <><span className="al-spinner" />Authenticating...</>
+                : <>Sign In to Dashboard</>
+              }
             </button>
+
           </form>
 
-          {/* Footer */}
           <div className="al-form-footer">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>

@@ -6,6 +6,13 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    # Add the project parent directory to the Python path
+    # This allows Python to find apps like 'users', 'products', etc.
+    # which are in the sibling directories of 'ZyraMart'
+    project_parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if project_parent not in sys.path:
+        sys.path.insert(0, project_parent)
+    
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ZyraMart.settings")
     try:
         from django.core.management import execute_from_command_line

@@ -27,4 +27,3 @@ def admin_login(request):
     return Response({
         'error': 'Invalid credentials or not an admin'
     }, status=status.HTTP_401_UNAUTHORIZED)
-
