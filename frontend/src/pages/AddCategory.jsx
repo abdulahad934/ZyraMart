@@ -71,7 +71,7 @@ const AddCategory = () => {
   setLoading(true)
 
   try {
-    const token = localStorage.getItem('accessToken', data.success)
+    const token = localStorage.getItem('accessToken')
 
     const response = await fetch(
       'http://127.0.0.1:8000/api/products/add_category/',
