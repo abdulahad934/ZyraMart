@@ -44,11 +44,11 @@ class ProductImage(models.Model):
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
-    sku = models.CharField(max_length=100, unique=True)
+    sku = models.CharField(max_length=100, unique=True, blank=True)
     unit = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    stock = models.PositiveIntegerField(default=0)
+    stock = models.PositiveIntegerField(default=0, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
