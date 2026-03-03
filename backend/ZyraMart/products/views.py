@@ -1,6 +1,5 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -8,75 +7,75 @@ from .models import *
 from .serializers import *
 
 
-
-
-
-@api_view(['POST'])
-
-@permission_classes([IsAuthenticated])
-
-def add_category(request):
-    serializer = CategorySerializer(data = request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-        return Response({
-            "success": True,
-            "message": "Category created Successfully!",
-            "data": serializer.data
-        }, status= 200)
-    
-    return Response({
-        "sussess": False,
-        "message": "Category Failds",
-        "errors": serializer.errors
-    }, status= 400)
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-
-def add_brand(request):
-    serializer = AddBrandSerializer(data = request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response({
-            "success": True,
-            "message": "Brand Created Successfully",
-            "data": serializer.data
-        }, status=200)
-    
-    return Response({
-        "success": False,
-        "message": "Add Brand Faild",
-        "errors": serializer.errors
-    }, status=400)
-
-
-
-
-
-
-class AddProductAPIView(APIView):
-    @transaction.atomic
+class AddCategoryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ProductSerializer(data= request.data)
+        serializer = AddCategorySerializer(data = request.data)
 
-        if serializer.is_valid():
-            product = serializer.save()
+        if serializer.is_valid:
+            serializer.save()
+
             return Response({
-                'success': True,
-                'message': "Product Add SuccessFully!",
-                "product_id": product.id
-            }, status=200)
+                "success": True,
+                "message": " Add Product successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
         
         return Response({
             "success": False,
-            "message": "Faild Added Product",
-            "Errors": serializer.errors
-        }, status=400)
+            "message": "Add Product Faild!",
+            "errors": serializer.errors
+        }, status=status.HTTP_401_UNAUTHORIZED)
+    
+# AddBrand Api 
+
+class AddBrandAPIVew(APIView):
+
+    def post(self, request):
+        permission_classes = [IsAuthenticated]
+
+        serializer = AddBrandSerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "success": True,
+                "message": "Add Brand Successfully",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response({
+            "success": False,
+            "message": "Faild Brand added !",
+            "errors": serializer.errors
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# AddProduct Api
+
+class AddProductAPIViw(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ProductImageSerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "success": True,
+                "message": "Add Product successfully!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            "success": False,
+            "message": "Faild Add Product",
+            "errors": serializer.errors
+        }, status=status.HTTP_401_UNAUTHORIZED)
+    
+
 
 
 

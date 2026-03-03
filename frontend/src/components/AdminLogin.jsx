@@ -13,34 +13,31 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!username.trim() || !password.trim()) {
-      toast.error('Username and password are required');
-      return;
+   e.preventDefault();
+   if(!username.trim() || !password.trim()){
+    toast.error("username and password must be required! ")
+    return
+   }
+   try{
+    const response = await fetch("http://127.0.0.1:8000/api/users/admin-login",{
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({username, password})
+    });
+    const data = await response.json();
+    if(!response.ok){
+      toast.error( data.message || "Admin Login Faild please Try Again")
     }
-    setLoading(true);
-    try {
-      const response = await fetch('http://127.0.0.1:8000/api/users/admin-login/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await response.json();
-
-      if (response.ok && data.access && data.refresh) {
-        localStorage.setItem('accessToken', data.access);
-        localStorage.setItem('refreshToken', data.refresh);
-        toast.success(data.message || 'Login successful!');
-        setTimeout(() => navigate('/admin-dashboard'), 500);
-      } else {
-        toast.error(data.message || 'Invalid credentials!');
-      }
-    } catch (error) {
-      toast.error('Server error. Try again later.');
-      console.error('Login error:', error);
-    } finally {
-      setLoading(false);
-    }
+    toast.success(data.message || "Login Successfully!")
+    localStorage.getItem("accessToken")
+    localStorage.getItem("refreshToken")
+    navigate('/admin-dashboard')
+    
+   } catch(error){
+    toast.error(error.message || "Server Errors")
+   } finally{
+    setLoading(false)
+   }
   };
 
   return (

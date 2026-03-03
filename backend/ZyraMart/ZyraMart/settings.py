@@ -9,6 +9,8 @@ SECRET_KEY = "django-insecure-8qx_*(#8a(h*v-gu-b43wfcif)40s6)y$f^a^*5h4q^427bklk
 DEBUG = True
 ALLOWED_HOSTS = []
 
+# URL Configuration
+APPEND_SLASH = False
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -94,9 +96,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ),
 }
+
 
 # Simmple JWT Settings
 SIMPLE_JWT = {
